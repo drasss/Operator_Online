@@ -6,6 +6,7 @@ import pickle
 import os.path
 import streamlit as st
 
+import google.oauth2
 #from streamlit_gsheets import GSheetsConnection
 #import google.auth
 #from googleapiclient.discovery import build
