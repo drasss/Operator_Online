@@ -5,7 +5,7 @@ import os
 import pickle
 import os.path
 import streamlit as st
-from streamlit_google_auth import Authenticate
+from streamlit_gsheets import GSheetsConnection
 import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -15,12 +15,7 @@ st.set_page_config(layout="wide")
 test, tab2, tab1 = st.tabs(["tests", "Résumé","TDL"])
 #--------------------------- GSHEET
 
-authenticator = Authenticate(
-    secret_credentials_path='Credentials.json',
-    cookie_name='tdl_online',
-    cookie_key='this_is_secret',
-    redirect_uri='http://localhost:8501',
-)
+
 def gsheet_api_check(SCOPES):
     creds = None
     if os.path.exists('token.pickle'):
