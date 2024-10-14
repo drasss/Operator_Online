@@ -9,7 +9,6 @@ from google.auth.transport.requests import Request
 import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-import pandas as pd
 #Before And tabs
 st.set_page_config(layout="wide")
 test, tab2, tab1 = st.tabs(["tests", "Résumé","TDL"])
@@ -86,7 +85,11 @@ def saving():
 
 
     
-
+##    for i in range(nb):
+##        content_write=str(i)+"".join([" | " + str(TABB[i][j]) for j in range(1,len(TABB[i]))])+"\n"
+##        print(TABB)
+##        fichier.write(str(content_write))
+##    fichier.close()
 
     
 #test
@@ -111,69 +114,51 @@ test.camera_input("Take a picture")
 test.color_picker("Pick a color")
 x=test.text("rr")
 
-# tab1 TDL ----------------------------------------- A CHANGER
-ranging = 'A1:F100'
-data = pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging)
-df = pd.DataFrame(data)
+# tab1 TDL
 
-###contenu tab
-##try : TDL==""   #------------------------
-##except :
-##    fichier=open("TDL.txt")
-##    TDL_text=fichier.read() #------------------------
-##    fichier.close()
+#contenu tab
+try : TDL==""
+except :
+    fichier=open("TDL.txt")
+    TDL_text=fichier.read()
+    fichier.close()
 
 
 #transformation 
-##
-##TDL_text=TDL_text.strip("\n").split("\n") #------------------------ 
-##TDL=[TDL_text[i].split(" | ") for i in range(len(TDL_text))] #------------------------
-### numéro de ligne
+
+TDL_text=TDL_text.strip("\n").split("\n")
+TDL=[TDL_text[i].split(" | ") for i in range(len(TDL_text))]
+# numéro de ligne
 
 
 
 if 'counter' not in st.session_state:
-    st.session_state['counter']=len(df) #------------------------
+    st.session_state['counter']=len(TDL)
 button_col1,button_col2=tab1.columns(2)
 
 
 
-#------------------------------------------------------------------------------boutons add row
+#boutons add row
 tm=time.localtime()
-
-def add_ro():
-    service = build("sheets", "v4", credentials=creds)
-
-    values = [[False,"","--","",str(tm[0])+"-"+str(tm[1])+"-"+str(tm[2]),str(tm[3])+":"+str(tm[4])]]
-    body = {"values": values}
-    result = (
-        service.spreadsheets()
-        .values()
-        .append(
-            spreadsheetId="1szbNj6_bH4mA9HsBIJD-qKyrNFYwYyEqG-ekmoGnE5A",
-            range="A1:A1",
-            valueInputOption="USER_ENTERED",
-            body=body,
-        )
-        .execute()
-    )
-    
+if button_col1.button("add row"):
+    TDL+=[['0', '', '', '', str(tm[0])+"-"+str(tm[1])+"-"+str(tm[2]), str(tm[3])+":"+str(tm[4])]]
     st.session_state['counter']+=1
 
-button_col1.button("add row",on_click=add_ro)
 
 #boutons delete row
 def dlrow(i,**parameters):
-    global nb,df
+    global TDL,nb
     print("-----------------",i,"/",nb)
     print(TABB[i])
-    print(df)
-    print(df.drop([i]))
-    df=df.drop([i])
+    del TDL[i]
     del TABB[i]
 
+
+    for j in range(i,len(TDL)):
+        TDL[j][0]=j+i
     nb-=1
     st.session_state['counter']-=1
+    print("-------------- PPPOOOOOOPPPPP--------------------------\n",TDL)
     print("-----")
     print(TABB)
     saving()
@@ -191,11 +176,11 @@ for i in range(nb):
     #button , text_input ,  selectbox , text_area , date_input , time_input
 
     TABB+=[[col_tab1[i][0].button("X",key=str(i)+"tab1button",on_click=dlrow,kwargs={"i":i}),
-        col_tab1[i][1].text_input("name",key=str(i)+"tab1name",value=df[1][i]),
-         col_tab1[i][2].selectbox("state",["--","Fini","En cours","A commencer","Pas de mon ressort"],key=str(i)+"tab1state",index=["--","Fini","En cours","A commencer","Pas de mon ressort"].index(df[2][i])),
-         col_tab1[i][3].text_area("desc",key=str(i)+"tab1desc",value=str(df[3][i])).replace("\n"," "),
-         col_tab1[i][4].date_input("Date",key=str(i)+"tab1date",value=datetime.datetime(int(df[4][i].split("-")[0]),int(df[4][i].split("-")[1]),int(df[4][i].split("-")[2]))),
-        col_tab1[i][5].time_input("Time",key=str(i)+"tab1time",value=datetime.time(int(df[5][i].split(":")[0]),int(df[5][i].split(":")[1])))]]
+        col_tab1[i][1].text_input("name",key=str(i)+"tab1name",value=TDL[i][1]),
+         col_tab1[i][2].selectbox("state",["","Fini","En cours","A commencer","Pas de mon ressort"],key=str(i)+"tab1state",index=["","Fini","En cours","A commencer","Pas de mon ressort"].index(TDL[i][2])),
+         col_tab1[i][3].text_area("desc",key=str(i)+"tab1desc",value=str(TDL[i][3])).replace("\n"," "),
+         col_tab1[i][4].date_input("Date",key=str(i)+"tab1date",value=datetime.datetime(int(TDL[i][4].split("-")[0]),int(TDL[i][4].split("-")[1]),int(TDL[i][4].split("-")[2]))),
+        col_tab1[i][5].time_input("Time",key=str(i)+"tab1time",value=datetime.time(int(TDL[i][5].split(":")[0]),int(TDL[i][5].split(":")[1])))]]
 
 ##button=[TABB[i][0] for i in range(len(TABB))]
 ##print(button)
@@ -209,5 +194,5 @@ saving()
 # tab2
 RES=[]
 for i in range(nb):
-    tab2.checkbox(df[1][i],key=str(i)+"resume")
+    tab2.checkbox(TDL[i][1],key=str(i)+"resume")
 
