@@ -6,8 +6,6 @@ import pickle
 import os.path
 import streamlit as st
 from streamlit_google_auth import Authenticate
-
-
 import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
