@@ -8,8 +8,8 @@ import streamlit as st
 
 #from streamlit_gsheets import GSheetsConnection
 #import google.auth
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+#from googleapiclient.discovery import build
+#from googleapiclient.errors import HttpError
 import pandas as pd
 #Before And tabs
 st.set_page_config(layout="wide")
