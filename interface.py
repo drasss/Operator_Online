@@ -9,7 +9,7 @@ try :
     from google.auth.transport.requests import Request
 except :
     os.system("pip install google-auth-oauthlib")
-    time.sleep(5)
+    time.sleep(10)
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
 import google.auth
