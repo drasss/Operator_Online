@@ -8,7 +8,7 @@ try :
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
 except :
-    os.system("pip install google_auth_oauthlib")
+    os.system("sudo pip install google-auth-oauthlib")
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
 import google.auth
