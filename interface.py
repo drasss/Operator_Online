@@ -32,11 +32,7 @@ def gsheet_api_check(SCOPES):
     return creds
  
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-<<<<<<< Updated upstream
-SPREADSHEET_ID = '1szbNj6_bH4mA9HsBIJD-qKyrNFYwYyEqG-ekmoGnE5A'
-=======
 SPREADSHEET_ID = '1A-WhcCyeP82OnuXER_JlSdWoO-EFnbnOQe2KinYo2bQ'
->>>>>>> Stashed changes
  
 creds=gsheet_api_check(SCOPES)
  
@@ -64,11 +60,7 @@ def saving():
         service.spreadsheets()
         .values()
         .update(
-<<<<<<< Updated upstream
-            spreadsheetId="1szbNj6_bH4mA9HsBIJD-qKyrNFYwYyEqG-ekmoGnE5A",
-=======
             spreadsheetId="1A-WhcCyeP82OnuXER_JlSdWoO-EFnbnOQe2KinYo2bQ",
->>>>>>> Stashed changes
             range="A1:F20",
             valueInputOption="USER_ENTERED",
             body=body,
@@ -82,11 +74,7 @@ def saving():
         service.spreadsheets()
         .values()
         .update(
-<<<<<<< Updated upstream
-            spreadsheetId="1szbNj6_bH4mA9HsBIJD-qKyrNFYwYyEqG-ekmoGnE5A",
-=======
             spreadsheetId="1A-WhcCyeP82OnuXER_JlSdWoO-EFnbnOQe2KinYo2bQ",
->>>>>>> Stashed changes
             range="A1:F20",
             valueInputOption="USER_ENTERED",
             body=body,
@@ -143,11 +131,7 @@ def add_ro():
         service.spreadsheets()
         .values()
         .append(
-<<<<<<< Updated upstream
-            spreadsheetId="1szbNj6_bH4mA9HsBIJD-qKyrNFYwYyEqG-ekmoGnE5A",
-=======
             spreadsheetId="1A-WhcCyeP82OnuXER_JlSdWoO-EFnbnOQe2KinYo2bQ",
->>>>>>> Stashed changes
             range="A1:A1",
             valueInputOption="USER_ENTERED",
             body=body,
