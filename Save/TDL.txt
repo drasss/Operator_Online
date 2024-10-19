@@ -1,4 +1,0 @@
-0 | Lire la documentation | En cours | lire la documentation de SHE sur le TGEN electra surtout sur le module gearbox  word des differents types de docs : OK Excell des AMDEC : A voir  doc du moteur TGEN ELECTRA : OK  comment fonctionne un moteur ? : Suffisemment ok.... spécificités TGEN ELECTRA : a voir | 2024-10-08 | 08:00:00
-1 | Passeport | A commencer | Faire une demande de passeport | 2024-10-10 | 14:00:00
-2 | Visite médicale | Pas de mon ressort | attendre le mail pour faire la visite médicale | 2024-10-07 | 08:39:00
-3 |  |  |  | 2024-10-13 | 15:49:00
