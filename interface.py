@@ -61,7 +61,7 @@ def saving():
         .values()
         .update(
             spreadsheetId="1FEdZ6HLUzO373"+"k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
-            range="A1:C20",
+            range="A1:C50",
             valueInputOption="USER_ENTERED",
             body=body,
         )
@@ -75,7 +75,7 @@ def saving():
         .values()
         .update(
             spreadsheetId="1FEdZ6HLUzO373k83tOCNLS"+"qnoSd_3ZXRJMc37TjQbHI",
-            range="A1:C20",
+            range="A1:C50",
             valueInputOption="USER_ENTERED",
             body=body,
         )
