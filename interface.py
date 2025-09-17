@@ -123,7 +123,7 @@ def delrow(i):
 TABB=[]
 for i in range(len(st.session_state['TABB'])):
     cl=st.container(key="container"+str(i))
-    ct=cl.columns([1,1,4,1])
+    ct=cl.columns([1,4,9,4])
     ct[0].button("X",key="del"+str(i),on_click=delrow,args=(i,))
     TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])),
     ct[2].text_area("description",key="desc"+str(i),value=str(st.session_state['TABB'][i][1])),
