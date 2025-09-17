@@ -11,7 +11,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pandas as pd
 #Before And tabs
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide",page_title="Operator Online",page_icon="🧊",initial_sidebar_state="collapsed")
 #--------------------------- GSHEET
 debug=st.sidebar.checkbox("debug",False)
  
