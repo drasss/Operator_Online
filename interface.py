@@ -32,7 +32,7 @@ def gsheet_api_check(SCOPES):
     return creds
  
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI'
+
  
 creds=gsheet_api_check(SCOPES)
  
