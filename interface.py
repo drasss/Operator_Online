@@ -127,7 +127,7 @@ with st.spinner("Patientez..."):
         ct[0].button("X",key="del"+str(i),on_click=delrow,args=(i,))
         TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])),
         ct[2].text_area("description",key="desc"+str(i),value=str(st.session_state['TABB'][i][1])),
-        ct[3].selectbox("status",key="status"+str(i),options=["à faire","en cours","terminé","---"],index=["à faire","en cours","terminé","---"].index(str(st.session_state['TABB'][i][2])))]]
+        ct[3].selectbox("status",key="status"+str(i),options=["à faire","en cours","terminé","Pas de mon ressort","---"],index=["à faire","en cours","terminé","Pas de mon ressort","---"].index(str(st.session_state['TABB'][i][2])))]]
     st.session_state['TABB']=TABB
 
 
