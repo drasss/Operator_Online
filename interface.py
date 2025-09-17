@@ -14,7 +14,7 @@ import pandas as pd
 st.set_page_config(layout="wide",page_title="Operator Online",page_icon="🧊",initial_sidebar_state="collapsed")
 #--------------------------- GSHEET
 debug=st.sidebar.checkbox("debug",False)
-with st.spinner("Patientez..."):
+with st.spinner("Patientez...",width="stretch"):
     def gsheet_api_check(SCOPES):
         creds = None
         if os.path.exists('token.pickle'):
