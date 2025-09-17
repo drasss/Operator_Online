@@ -32,7 +32,7 @@ def gsheet_api_check(SCOPES):
     return creds
  
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
+SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXR'+'JMc37TjQbHI'
  
 creds=gsheet_api_check(SCOPES)
  
@@ -60,7 +60,7 @@ def saving():
         service.spreadsheets()
         .values()
         .update(
-            spreadsheetId="1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
+            spreadsheetId="1FEdZ6HLUzO373"+"k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
             range="A1:C20",
             valueInputOption="USER_ENTERED",
             body=body,
@@ -74,7 +74,7 @@ def saving():
         service.spreadsheets()
         .values()
         .update(
-            spreadsheetId="1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
+            spreadsheetId="1FEdZ6HLUzO373k83tOCNLS"+"qnoSd_3ZXRJMc37TjQbHI",
             range="A1:C20",
             valueInputOption="USER_ENTERED",
             body=body,
