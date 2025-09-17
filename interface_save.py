@@ -12,8 +12,8 @@ from googleapiclient.errors import HttpError
 import pandas as pd
 #Before And tabs
 st.set_page_config(layout="wide")
+tab1, tab2 = st.tabs(["TDL","Résumé"])
 #--------------------------- GSHEET
-
  
 def gsheet_api_check(SCOPES):
     creds = None
@@ -54,33 +54,33 @@ def pull_sheet_data(SCOPES,SPREADSHEET_ID,DATA_TO_PULL):
  
 def saving():
     service = build("sheets", "v4", credentials=creds)
-    values = [[""]*3]*10
+    values = [[""]*6]*10
     body = {"values": values}
     result = (
         service.spreadsheets()
         .values()
         .update(
             spreadsheetId="1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
-            range="A1:C20",
+            range="A1:F20",
             valueInputOption="USER_ENTERED",
             body=body,
         )
         .execute())
  
  
-    values = [[str(st.session_state['TABB'][i][j]) for j in range(len(st.session_state['TABB'][i]))] for i in range(len(st.session_state['TABB']))]
+    values = [[str(TABB[i][j]) for j in range(len(TABB[i]))] for i in range(len(TABB))]
     body = {"values": values}
     result = (
         service.spreadsheets()
         .values()
         .update(
             spreadsheetId="1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
-            range="A1:C20",
+            range="A1:F20",
             valueInputOption="USER_ENTERED",
             body=body,
         )
         .execute())
-
+ 
  
     
  
@@ -88,50 +88,74 @@ def saving():
     
 
  
-# st TDL ----------------------------------------- A CHANGER
-ranging = 'A1:C100'
+# tab1 TDL ----------------------------------------- A CHANGER
+ranging = 'A1:F100'
 data = pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging)
 df = pd.DataFrame(data)
 st.write(df)
  
 if 'counter' not in st.session_state:
     st.session_state['counter']=len(df) #------------------------
-
+button_col1,button_col2=tab1.columns(2)
  
  
 #------------------------------------------------------------------------------boutons add row
-## ------------ DO NOT TOUCH
-if 'TABB' not in st.session_state:
-    st.session_state['TABB']=df.values.tolist() #------------------------
-
-
-but=[]
-## ------------ DO NOT TOUCH
-
-def add_row():
+tm=time.localtime()
+ 
+def add_ro():
+    service = build("sheets", "v4", credentials=creds)
+ 
+    values = [[False,"","--","",str(tm[0])+"-"+str(tm[1])+"-"+str(tm[2]),str(tm[3])+":"+str(tm[4])]]
+    body = {"values": values}
+    result = (
+        service.spreadsheets()
+        .values()
+        .append(
+            spreadsheetId="1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXRJMc37TjQbHI",
+            range="A1:A1",
+            valueInputOption="USER_ENTERED",
+            body=body,
+        )
+        .execute()
+    )
+ 
     st.session_state['counter']+=1
-    st.session_state['TABB'].append(["","","---"])
-
-st.button("Ajouter une tâche",on_click=add_row)
-
-def delrow(i):
-    st.session_state['TABB'].pop(i)
+ 
+button_col1.button("add row",on_click=add_ro)
+ 
+#boutons delete row
+def dlrow(i,**parameters):
+    global nb,df
+    start_time=time.time()
+    df=df.drop([i])
+    del TABB[i]
+ 
+    nb-=1
     st.session_state['counter']-=1
-
-## ------------ DO NOT TOUCH
+    end_time=time.time()
+ 
+nb=st.session_state['counter']
+ 
+ 
 TABB=[]
-for i in range(len(st.session_state['TABB'])):
-    cl=st.container(key="container"+str(i))
-    ct=cl.columns([1,1,4,1])
-    ct[0].button("X",key="del"+str(i),on_click=delrow,args=(i,))
-    TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])),
-    ct[2].text_area("description",key="desc"+str(i),value=str(st.session_state['TABB'][i][1])),
-    ct[3].selectbox("status",key="status"+str(i),options=["à faire","en cours","terminé","---"],index=["à faire","en cours","terminé","---"].index(str(st.session_state['TABB'][i][2])))]]
-st.session_state['TABB']=TABB
-
-
-
-
+col_tab1=[]
+for i in range(nb):
+    col_tab1+=[tab1.columns([1,3,3,4,2,2],vertical_alignment="center")]
+    # delete , name      ,   state    , description , 
+    #button , text_input ,  selectbox , text_area , date_input , time_input
+ 
+    TABB+=[[col_tab1[i][0].button("X",key=str(i)+"tab1button",on_click=dlrow,kwargs={"i":i}),
+        col_tab1[i][1].text_input("name",key=str(i)+"tab1name",value=df[1][i]),
+         col_tab1[i][2].selectbox("state",["--","Fini","En cours","A commencer","Pas de mon ressort"],key=str(i)+"tab1state",index=["--","Fini","En cours","A commencer","Pas de mon ressort"].index(df[2][i])),
+         col_tab1[i][3].text_area("desc",key=str(i)+"tab1desc",value=str(df[3][i])).replace("\n"," "),
+         col_tab1[i][4].date_input("Date",key=str(i)+"tab1date",value=datetime.datetime(int(df[4][i].split("-")[0]),int(df[4][i].split("-")[1]),int(df[4][i].split("-")[2]))),
+        col_tab1[i][5].time_input("Time",key=str(i)+"tab1time",value=datetime.time(int(df[5][i].split(":")[0]),int(df[5][i].split(":")[1])))]]
+ 
+ 
 saving()
-## ------------ DO NOT TOUCH
-st.write(st.session_state['TABB'])
+ 
+ 
+# tab2
+RES=[]
+for i in range(nb):
+    tab2.checkbox(df[1][i],key=str(i)+"resume")
