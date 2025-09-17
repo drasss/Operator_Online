@@ -105,7 +105,7 @@ if 'TABB' not in st.session_state:
     st.session_state['TABB']=df.values.tolist() #------------------------
 
 
-but=[]
+
 ## ------------ DO NOT TOUCH
 
 def add_row():
@@ -113,6 +113,7 @@ def add_row():
     st.session_state['TABB'].append(["","","---"])
 
 st.button("Ajouter une tâche",on_click=add_row)
+st.divider()
 
 def delrow(i):
     st.session_state['TABB'].pop(i)
