@@ -11,9 +11,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pandas as pd
 #Before And tabs
-st.set_page_config(layout="wide",page_title="Operator Online",page_icon="🧊",initial_sidebar_state="collapsed")
+
+st.set_page_config(layout="wide",page_title="Operator Online",page_icon="⚙️",initial_sidebar_state="collapsed")
 #--------------------------- GSHEET
 debug=st.sidebar.checkbox("debug",False)
+
+
+a,b=st.tabs(["Operator Online","Explore"])
 
 def gsheet_api_check(SCOPES):
     creds = None
@@ -89,12 +93,13 @@ def saving():
 
 
 # st TDL ----------------------------------------- A CHANGER
-ranging = 'A1:C100'
-data = pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging)
-df = pd.DataFrame(data)
-if debug : st.write(df)
+
 
 if 'counter' not in st.session_state:
+    ranging = 'A1:C100'
+    data = pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging)
+    df = pd.DataFrame(data)
+    if debug : a.write(df)
     st.session_state['counter']=len(df) #------------------------
 
 
@@ -112,8 +117,8 @@ def add_row():
     st.session_state['counter']+=1
     st.session_state['TABB'].append(["","","---"])
 
-st.button("Ajouter une tâche",on_click=add_row)
-st.divider()
+a.button("Ajouter une tâche",on_click=add_row)
+a.divider()
 
 def delrow(i):
     st.session_state['TABB'].pop(i)
@@ -122,7 +127,7 @@ def delrow(i):
 ## ------------ DO NOT TOUCH
 TABB=[]
 for i in range(len(st.session_state['TABB'])):
-    cl=st.container(key="container"+str(i))
+    cl=a.container(key="container"+str(i))
     ct=cl.columns([1,4,9,4])
     ct[0].button("X",key="del"+str(i),on_click=delrow,args=(i,))
     TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])),
@@ -135,4 +140,4 @@ st.session_state['TABB']=TABB
 
 saving()
 ## ------------ DO NOT TOUCH
-if debug : st.write(st.session_state['TABB'])
+if debug : a.write(st.session_state['TABB'])
