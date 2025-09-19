@@ -18,42 +18,55 @@ debug=st.sidebar.checkbox("debug",False)
 mdp=st.sidebar.text_input("Mot de passe",type="password")
 
 
-if mdp=="17817":
+
+### gsheet API
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXR'+'JMc37TjQbHI'
+ranging = 'A1:H100'  
+def gsheet_api_check(SCOPES):
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'Credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+    return creds
+
+
+
+creds=gsheet_api_check(SCOPES)
+
+from googleapiclient.discovery import build
+def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging):
+    creds = gsheet_api_check(SCOPES)
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,range=ranging).execute()
+    values = result.get('values', [])
+    if not values:
+        pass
+    else:
+        data = values
+        return data
+
+
+# </gsheet api>
+
+
+#if 'mdp' not in st.session_state:
+st.session_state['mdp']=pull_sheet_data(SCOPES,SPREADSHEET_ID,"H1:H1")[0][0]
+
+if st.session_state['mdp']==mdp:
     a,b=st.tabs(["Operator Online","Explore"])
 
-    def gsheet_api_check(SCOPES):
-        creds = None
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
-                creds = pickle.load(token)
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'Credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            with open('token.pickle', 'wb') as token:
-                pickle.dump(creds, token)
-        return creds
 
-    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXR'+'JMc37TjQbHI'
-
-    creds=gsheet_api_check(SCOPES)
-
-    from googleapiclient.discovery import build
-    def pull_sheet_data(SCOPES,SPREADSHEET_ID,DATA_TO_PULL):
-        creds = gsheet_api_check(SCOPES)
-        service = build('sheets', 'v4', credentials=creds)
-        sheet = service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,range=ranging).execute()
-        values = result.get('values', [])
-        if not values:
-            pass
-        else:
-            data = values
-            return data
 
 
     #save
