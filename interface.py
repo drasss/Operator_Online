@@ -179,7 +179,6 @@ if st.session_state['mdp']==mdp:
     # else : 
     #     st.session_state['rr']=0
 
-    print(4,"before saving\n")
     saving()
     ## ------------ DO NOT TOUCH
     if debug :
