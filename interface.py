@@ -18,7 +18,6 @@ debug=st.sidebar.checkbox("debug",False)
 mdp=st.sidebar.text_input("Mot de passe",type="password")
 
 
-
 ### gsheet API
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXR'+'JMc37TjQbHI'
@@ -64,7 +63,7 @@ def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging):
 st.session_state['mdp']=pull_sheet_data(SCOPES,SPREADSHEET_ID,"H1:H1")[0][0]
 
 if st.session_state['mdp']==mdp:
-    a,b=st.tabs(["Operator Online","Explore"])
+    a,b=st.tabs(["Operator Online","Debug"])
 
 
 
@@ -136,23 +135,53 @@ if st.session_state['mdp']==mdp:
     a.divider()
 
     def delrow(i):
+
+        if debug :
+            a.write("### Deleting row "+str(i))
+            a.write(st.session_state['TABB'])
         st.session_state['TABB'].pop(i)
         st.session_state['counter']-=1
-
+        if i<len(st.session_state['TABB']):
+            for j in range(i,len(st.session_state['TABB'])):
+                st.session_state["task"+str(j)]=st.session_state["task"+str(j+1)]
+                st.session_state["desc"+str(j)]=st.session_state["desc"+str(j+1)]
+                st.session_state["status"+str(j)]=st.session_state["status"+str(j+1)]   # lorsqu'on supprime une ligne, on décale les keys des lignes suivantes 
+        if debug : a.write(st.session_state['TABB'])
+    
+    if debug:
+        b.write("### TABB start")
+        b.write(st.session_state['TABB'])
     ## ------------ DO NOT TOUCH
+
     TABB=[]
     for i in range(len(st.session_state['TABB'])):
         cl=a.container(key="container"+str(i))
         ct=cl.columns([1,4,9,4])
+        if debug :
+            a.write("### Tâche "+str(i+1))
+            a.write(st.session_state['TABB'][i])
         ct[0].button("X",key="del"+str(i),on_click=delrow,args=(i,))
-        TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])),
+        TABB+=[[ct[1].text_input("tâche",key="task"+str(i),value=str(st.session_state['TABB'][i][0])), # source du pb +1
         ct[2].text_area("description",key="desc"+str(i),value=str(st.session_state['TABB'][i][1])),
         ct[3].selectbox("status",key="status"+str(i),options=["à faire","en cours","terminé","Pas de mon ressort","---"],index=["à faire","en cours","terminé","Pas de mon ressort","---"].index(str(st.session_state['TABB'][i][2])))]]
+        
     st.session_state['TABB']=TABB
+    if debug :
+        b.write("### TABB updated")
+        b.write(st.session_state['TABB'])
 
+    #   #------------- Double rerun
+    # if 'rr' not in st.session_state:
+    #     st.session_state['rr']=0
+    # if st.session_state['rr']==0:
+    #     st.session_state['rr']=1
+    #     st.rerun()
+    # else : 
+    #     st.session_state['rr']=0
 
-
-
+    print(4,"before saving\n")
     saving()
     ## ------------ DO NOT TOUCH
-    if debug : a.write(st.session_state['TABB'])
+    if debug :
+        b.write("### TABB end")
+        b.write(st.session_state['TABB'])
