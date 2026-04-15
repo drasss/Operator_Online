@@ -34,36 +34,14 @@ decoded = base64.b64decode(st.secrets["pickle"])
 
 creds = pickle.loads(decoded)
 
-def gsheet_api_check(SCOPES):
-    creds = None
-
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-           
-            flow = InstalledAppFlow.from_client_config(
-                CLIENT_CONFIG,
-                SCOPES
-            )
-            creds = flow.run_local_server(port=0)
-
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-
-    return creds
 
 
 
-creds=gsheet_api_check(SCOPES)
+
 
 from googleapiclient.discovery import build
 def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging):
-    creds = gsheet_api_check(SCOPES)
+    global creds
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,range=ranging).execute()
