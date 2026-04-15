@@ -20,22 +20,44 @@ mdp=st.sidebar.text_input("Mot de passe",type="password")
 
 ### gsheet API
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '1FEdZ6HLUzO373k83tOCNLSqnoSd_3ZXR'+'JMc37TjQbHI'
+SPREADSHEET_ID = st.secrets["SPREADSHEET_ID"]
 ranging = 'A1:H100'  
+
+CLIENT_CONFIG = {
+  "installed": {
+    "client_id": st.secrets["client_id"],
+    "project_id": st.secrets["project_id"],
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": st.secrets["client_secret"],
+    "redirect_uris": [
+      "http://localhost"
+    ]
+  }
+}
+
 def gsheet_api_check(SCOPES):
     creds = None
+
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'Credentials.json', SCOPES)
+           
+            flow = InstalledAppFlow.from_client_config(
+                CLIENT_CONFIG,
+                SCOPES
+            )
             creds = flow.run_local_server(port=0)
+
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
+
     return creds
 
 
@@ -167,6 +189,7 @@ if st.session_state['mdp']==mdp:
         
     st.session_state['TABB']=TABB
     if debug :
+        b.write(len(st.session_state['TABB']))
         b.write("### TABB updated")
         b.write(st.session_state['TABB'])
 
